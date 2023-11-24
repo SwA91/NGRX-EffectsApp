@@ -1,13 +1,15 @@
 import { HttpClientModule } from "@angular/common/http";
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
-import { UsersModule } from './users/users.module';
-import { StoreModule } from '@ngrx/store';
 import { appReducers } from "./store/app.reducer";
-import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { UsersModule } from './users/users.module';
+import { EffectsArray } from "./store/effects";
 
 @NgModule({
   declarations: [
@@ -20,6 +22,7 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
     AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot(appReducers),
+    EffectsModule.forRoot(EffectsArray),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode
@@ -28,6 +31,7 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
       traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
       connectInZone: true // If set to true, the connection is established within the Angular zone
     }),
+
   ],
   bootstrap: [AppComponent]
 })

@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from "@ngrx/store";
+import { Subscription } from 'rxjs';
 import { UserModel } from 'src/app/models/user.mode';
-import { UsersService } from 'src/app/services/users.service';
+import * as actions from 'src/app/store/actions';
+import { loadUsers } from 'src/app/store/actions';
+import { AppState } from 'src/app/store/app.reducer';
 
 @Component({
   selector: 'app-list',
@@ -8,14 +12,37 @@ import { UsersService } from 'src/app/services/users.service';
   styles: [
   ]
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
+
   users: UserModel[] = [];
+  private subs!: Subscription;
 
   constructor(
-    public usersService: UsersService
+    private store: Store<AppState>,
   ) { }
 
   ngOnInit(): void {
-    this.usersService.getUsers().subscribe((users) => this.users = users);
+
+    this.subs = this.store.select('users')
+      .subscribe(({ users, payload }) => {
+
+        this.store.dispatch(actions.stopLoading());
+        this.users = users;
+
+        if (payload) {
+          this.store.dispatch(actions.showError({ payload }));
+        } else {
+          this.store.dispatch(actions.hideError());
+        }
+
+        this.store.dispatch(actions.clearUser());
+
+      });
+
+    this.store.dispatch(loadUsers());
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 }

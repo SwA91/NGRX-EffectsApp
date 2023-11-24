@@ -1,1 +1,9 @@
-<p>user works!</p>
+<div *ngIf="user" class="card" style="width: 18rem;">
+    <img [src]="user.avatar" alt="avatar" class="card-img-top">
+    <div class="card-body">
+        <h5 class="card-title">{{user.first_name}} {{user.last_name}}</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+            content.</p>
+        <a routerLink="home" class="btn btn-primary">Go list</a>
+    </div>
+</div>

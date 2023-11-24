@@ -3,6 +3,8 @@ import { UserModel } from 'src/app/models/user.mode';
 
 export const loadUsers = createAction('[Users] Load Users');
 
+export const clearUsers = createAction('[Users] Clear Users');
+
 export const loadUsersSuccess = createAction(
     '[Users] Load Users Success',
     props<{ users: UserModel[] }>()

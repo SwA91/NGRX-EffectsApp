@@ -4,34 +4,38 @@ import { UserModel } from 'src/app/models/user.mode';
 
 export interface UsersState {
     users: UserModel[],
-    loaded: boolean,
-    loading: boolean,
-    error: any,
+    payload: any,
 }
 
-export const userInitialState: UsersState = {
+export const usersInitialState: UsersState = {
     users: [],
-    loaded: false,
-    loading: false,
-    error: null,
+    payload: null,
 }
 
-const _usersReducer = createReducer(userInitialState,
+const _usersReducer = createReducer(usersInitialState,
 
-    on(Actions.loadUsers, state => ({ ...state, loading: true })),
+    on(Actions.loadUsers, (state): UsersState => ({ ...state })),
 
-    on(Actions.loadUsersSuccess, (state, { users }) => ({
+    on(Actions.clearUsers, (state): UsersState => ({
         ...state,
-        loading: false,
-        loaded: true,
+        users: [],
+        payload: null,
+    })),
+
+    on(Actions.loadUsersSuccess, (state, { users }): UsersState => ({
+        ...state,
+        payload: null,
         users: [...users]
     })),
 
-    on(Actions.loadUsersError, (state, { payload }) => ({
+    on(Actions.loadUsersError, (state, { payload }): UsersState => ({
         ...state,
-        loading: false,
-        loaded: false,
-        error: payload
+        users: [],
+        payload: {
+            url: payload.url,
+            name: payload.name,
+            message: payload.message
+        },
     })),
 );
 
